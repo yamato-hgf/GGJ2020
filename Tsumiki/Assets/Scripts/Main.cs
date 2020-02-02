@@ -49,7 +49,7 @@ public class Main : MonoBehaviour
             {
                 var pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                 pos.z = 0;
-                _clicked.transform.position = pos;
+                _clicked.SetPosition(pos);
             }
 
             if (Input.GetMouseButtonUp(0))
@@ -72,7 +72,19 @@ public class Main : MonoBehaviour
             yield return null;
         }
 
-        _text.text = "Clear!!\nLet's Go to Next Stage";
+        foreach (var obj in _objs)
+        {
+            obj.Reset();
+        }
+
+        if (_nextStage > 0)
+        {
+            _text.text = "Success! Go to the next stage.\n\nうまい！次は何が出てくるかな！？";
+        }
+        else
+        {
+            _text.text = "Congratulations!\n\nご馳走様でした！";
+        }
         _source.clip = _sounds[1];
         _source.Play();
         yield return new WaitForSeconds(3f);

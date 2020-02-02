@@ -6,14 +6,28 @@ public class Obj : MonoBehaviour
 {
     SpriteRenderer _sprite;
     Vector3 _firstPosition;
+    Vector3 _firstRotation;
 
     public bool IsOK ()
     {
-        if (Vector3.Distance(transform.position, _firstPosition) < 0.5f)
+        if (Vector3.Distance(transform.position, _firstPosition) < 0.2f)
         {
             return true;
         }
         return false;
+    }
+
+    public void Reset()
+    {
+        transform.position = _firstPosition;
+        transform.eulerAngles = _firstRotation;
+        Destroy(_rigidbody);
+    }
+
+    public void SetPosition(Vector3 pos)
+    {
+        _rigidbody.position = pos;
+        _rigidbody.velocity = Vector3.zero;
     }
 
     public void Bomb()
@@ -28,8 +42,16 @@ public class Obj : MonoBehaviour
     void Awake()
     {
         _firstPosition = transform.position;
+        _firstRotation = transform.eulerAngles;
         _rigidbody = GetComponent<Rigidbody2D>();
         _sprite = GetComponent<SpriteRenderer>();
+        var shadow = new GameObject();
+        shadow.transform.position = transform.position;
+        shadow.transform.rotation = transform.rotation;
+        var renderer = shadow.AddComponent<SpriteRenderer>();
+        renderer.sprite = _sprite.sprite;
+        renderer.color = new Color(0.5f, 0.5f, 0.5f, 1f);
+        renderer.sortingOrder = -1;
     }
 
     // Update is called once per frame
